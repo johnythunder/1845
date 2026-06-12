@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Podania i legendy — Siemieński 1845</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@300;400;600&display=swap');
+  :root {
+    --ink:#1a1410;--parchment:#f5efe3;--gold:#8b6914;--rust:#7a3020;
+    --fade:#c8b99a;--col-pl:#f0e8d8;--col-lt:#e8f0e4;--col-ru:#e8ddf0;
+    --col-pl-h:#d4c4a4;--col-lt-h:#c4d8bc;--col-ru-h:#c8b8dc;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--parchment);color:var(--ink);font-family:'Source Sans 3',sans-serif;font-weight:300;font-size:14px;line-height:1.55;}
+
+  /* NAV TABS */
+  .tabs{display:flex;border-bottom:2px solid var(--gold);background:var(--parchment);position:sticky;top:0;z-index:100;}
+  .tab{padding:.6rem 1.4rem;cursor:pointer;font-family:'Playfair Display',serif;font-size:.9rem;letter-spacing:.03em;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .15s;}
+  .tab:hover{color:var(--gold);}
+  .tab.active{border-bottom-color:var(--rust);color:var(--rust);font-weight:700;}
+
+  /* HEADER */
+  header{padding:2.5rem 2rem 1.8rem;text-align:center;border-bottom:2px solid var(--gold);}
+  header::before{content:'❧';font-size:1.8rem;color:var(--gold);display:block;margin-bottom:.6rem;opacity:.7;}
+  h1{font-family:'Playfair Display',serif;font-size:clamp(1.3rem,3vw,2rem);font-weight:700;line-height:1.2;}
+  .subtitle{margin-top:.4rem;font-size:.82rem;color:var(--gold);font-style:italic;}
+  .meta{margin-top:.3rem;font-size:.75rem;color:#888;}
+
+  /* SECTIONS */
+  .section{display:none;padding:0;}
+  .section.active{display:block;}
+
+  /* TABLE SECTION */
+  .intro{max-width:860px;margin:1.5rem auto;padding:0 2rem;font-size:.87rem;color:#444;line-height:1.7;}
+  .intro strong{color:var(--ink);font-weight:600;}
+  .legend-keys{display:flex;gap:1.2rem;justify-content:center;flex-wrap:wrap;margin:0 auto 1.2rem;padding:0 2rem;max-width:860px;font-size:.78rem;}
+  .key-item{display:flex;align-items:center;gap:.35rem;}
+  .key-swatch{width:16px;height:12px;border-radius:2px;border:1px solid rgba(0,0,0,.15);}
+  .wrap{max-width:1200px;margin:0 auto;padding:0 1rem 3rem;}
+  table{width:100%;border-collapse:collapse;font-size:.81rem;}
+  thead tr th{padding:.75rem .65rem;font-family:'Playfair Display',serif;font-weight:700;font-size:.88rem;letter-spacing:.04em;border-bottom:2px solid var(--gold);vertical-align:bottom;text-align:left;position:sticky;top:38px;z-index:10;background:var(--parchment);}
+  thead th.th-cat{background:#ede4d4;border-right:2px solid var(--gold);min-width:130px;}
+  thead th.th-pl{background:var(--col-pl-h);}
+  thead th.th-lt{background:var(--col-lt-h);}
+  thead th.th-ru{background:var(--col-ru-h);}
+  thead th .flag{font-size:1rem;display:block;margin-bottom:.15rem;}
+  tbody tr td{padding:.6rem .65rem;vertical-align:top;border-bottom:1px solid var(--fade);line-height:1.5;}
+  tbody tr td.td-cat{font-family:'Playfair Display',serif;font-weight:700;font-size:.83rem;background:#ede4d4;border-right:2px solid var(--gold);color:var(--rust);}
+  tbody tr td.td-pl{background:var(--col-pl);}
+  tbody tr td.td-lt{background:var(--col-lt);}
+  tbody tr td.td-ru{background:var(--col-ru);}
+  tbody tr:hover td.td-pl{background:var(--col-pl-h);}
+  tbody tr:hover td.td-lt{background:var(--col-lt-h);}
+  tbody tr:hover td.td-ru{background:var(--col-ru-h);}
+  tbody tr:hover td.td-cat{background:#d8ccba;}
+  .examples{margin-top:.35rem;font-size:.74rem;color:var(--gold);font-style:italic;}
+  .pill{display:inline-block;padding:.08rem .4rem;border-radius:10px;font-size:.68rem;font-weight:600;margin:.08rem .08rem 0 0;letter-spacing:.02em;}
+  .pill-yes{background:#2d6a2d22;color:#2d6a2d;border:1px solid #2d6a2d55;}
+  .pill-no{background:#7a302022;color:#7a3020;border:1px solid #7a302055;}
+  .pill-partial{background:#8b691422;color:#8b6914;border:1px solid #8b691455;}
+
+  /* PDF VIEWER SECTION */
+  .viewer-layout{display:flex;height:calc(100vh - 80px);overflow:hidden;}
+  .toc-panel{width:280px;min-width:220px;background:#ede4d4;border-right:2px solid var(--gold);display:flex;flex-direction:column;overflow:hidden;}
+  .toc-header{padding:.7rem 1rem;font-family:'Playfair Display',serif;font-size:.85rem;font-weight:700;color:var(--rust);border-bottom:1px solid var(--fade);flex-shrink:0;}
+  .toc-search{padding:.4rem .7rem;border:none;background:#e4d8c4;border-bottom:1px solid var(--fade);font-size:.78rem;font-family:inherit;width:100%;outline:none;color:var(--ink);}
+  .toc-search::placeholder{color:#aaa;}
+  .toc-list{overflow-y:auto;flex:1;}
+  .toc-item{display:flex;align-items:baseline;gap:.4rem;padding:.35rem .9rem;cursor:pointer;border-bottom:1px solid rgba(200,185,154,.4);font-size:.76rem;line-height:1.4;transition:background .1s;}
+  .toc-item:hover{background:#d8ccba;}
+  .toc-item.active{background:#c8b090;font-weight:600;}
+  .toc-num{color:var(--gold);font-weight:600;font-size:.7rem;min-width:22px;flex-shrink:0;}
+  .toc-title{color:var(--ink);flex:1;}
+  .toc-page{color:#aaa;font-size:.68rem;flex-shrink:0;}
+
+  .pdf-panel{flex:1;display:flex;flex-direction:column;overflow:hidden;background:#666;}
+  .pdf-toolbar{background:#444;color:#eee;display:flex;align-items:center;gap:.5rem;padding:.4rem .8rem;flex-shrink:0;font-size:.8rem;}
+  .pdf-toolbar button{background:#666;color:#eee;border:none;padding:.3rem .65rem;border-radius:3px;cursor:pointer;font-size:.78rem;}
+  .pdf-toolbar button:hover{background:#888;}
+  .pdf-toolbar input[type=number]{width:52px;text-align:center;background:#555;color:#eee;border:1px solid #888;border-radius:3px;padding:.2rem .3rem;font-size:.78rem;}
+  .pdf-canvas-wrap{flex:1;overflow:auto;display:flex;justify-content:center;align-items:flex-start;padding:1rem;}
+  #pdf-canvas{box-shadow:0 2px 12px rgba(0,0,0,.5);background:#fff;}
+
+  .no-pdf-msg{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1rem;color:#ccc;text-align:center;padding:2rem;}
+  .no-pdf-msg p{font-size:.9rem;max-width:380px;line-height:1.6;}
+  .no-pdf-msg code{background:#555;padding:.2rem .5rem;border-radius:3px;font-size:.78rem;color:#ddd;}
+
+  @media(max-width:700px){
+    .viewer-layout{flex-direction:column;}
+    .toc-panel{width:100%;height:200px;min-width:unset;}
+    table{font-size:.71rem;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Podania i legendy polskie, ruskie i litewskie</h1>
+  <p class="subtitle">Зібрав Луціан Сємєнський · Познань, 1845</p>
+  <p class="meta">Видання у відкритому доступі · публічне надбання</p>
+</header>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('table')">Порівняльна таблиця</div>
+  <div class="tab" onclick="showTab('viewer')">Читати книгу</div>
+</div>
+
+<!-- ===== TABLE SECTION ===== -->
+<div id="tab-table" class="section active">
+<div class="intro">
+  <p>Книга Сємєнського — романтичний фольклористичний корпус, зібраний з усних переказів, хронік і польових записів. Три традиції представлені нерівномірно: польських легенд найбільше (~70%), литовських ~20%, руських/українських ~10%. Таблиця будується на <strong>домінантних патернах</strong>, а не на абсолютній частоті.</p>
+</div>
+<div class="legend-keys">
+  <div class="key-item"><div class="key-swatch" style="background:var(--col-pl-h)"></div> Польська традиція</div>
+  <div class="key-item"><div class="key-swatch" style="background:var(--col-lt-h)"></div> Литовська / жемайтійська</div>
+  <div class="key-item"><div class="key-swatch" style="background:var(--col-ru-h)"></div> Руська / українська</div>
+</div>
+<div class="wrap">
+<table>
+  <thead>
+    <tr>
+      <th class="th-cat">Категорія</th>
+      <th class="th-pl"><span class="flag">🇵🇱</span>Польська традиція</th>
+      <th class="th-lt"><span class="flag">🇱🇹</span>Литовська традиція</th>
+      <th class="th-ru"><span class="flag">🇺🇦</span>Руська / українська</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="td-cat">Кінцівка героя</td>
+      <td class="td-pl">Переважно <strong>виживання або перемога</strong> через покровительство святого, сакральний артефакт чи хитрість. Смерть — карне покарання за вину, не нейтральний фінал.<div class="examples">Лег. 3 (Пяст), 4 (П'ять мучеників), 18 (Кріштоф), 30, 42, 44</div></td>
+      <td class="td-lt">Кінцівка <strong>договірна або двозначна</strong>: герой виживає через маніпуляцію правилами угоди. Присутній образ культурного героя-будівника.<div class="examples">Лег. 20 (Крумміне), 21 (Немон), 22 (Румшис), 144 (Убуртис)</div></td>
+      <td class="td-ru"><strong>Загибель обох сторін</strong> або безвихідь. Кінцівка — могила, пам'ятне місце, топонім.<div class="examples">Лег. 24 (Сорока, Непромах, Праксіда), 25 (Перепят), 26 (Меланка), 27 (Свирид), 99 (Черча)</div></td>
+    </tr>
+    <tr>
+      <td class="td-cat">Ставлення до нечистої сили</td>
+      <td class="td-pl">Чорт — <strong>комічний антагоніст</strong>, якого можна перехитрити або вигнати молитвою, хрестом, блаженним.<div class="examples">Лег. 38, 43, 63, 73 (Диявольський суд), 80</div></td>
+      <td class="td-lt">Чорт — <strong>партнер по договору</strong>. Угода з ним — прийнятний ресурс якщо ти розумніший. Перкун б'є дияволів блискавкою.<div class="examples">Лег. 22, 36 (Джуга), 118, 144, 145</div></td>
+      <td class="td-ru">Нечиста сила — <strong>атмосферна й невідворотна</strong>. Упирі, відьми, джума. Чаклунство — побутовий інструмент помсти між сусідами.<div class="examples">Лег. 26, 88, 98, 130, 138, 134–135</div></td>
+    </tr>
+    <tr>
+      <td class="td-cat">Агентність героя</td>
+      <td class="td-pl"><strong>Висока.</strong> Герой активно будує, засновує, судить, карає. Є культурні герої — засновники міст, замків, монастирів.<div class="examples">Лег. 2–3, 7, 31, 41</div></td>
+      <td class="td-lt"><strong>Висока, через хитрість.</strong> Герой провокує ворога виконати нездійсненне завдання, підміняє умови. Ініціатива — ключова чеснота.<div class="examples">Лег. 20, 22, 144, 145</div></td>
+      <td class="td-ru"><strong>Низька або реактивна.</strong> Герої відповідають на події. Сховатись, втекти, чекати — основні стратегії. Активні герої гинуть.<div class="examples">Лег. 24–29 — усі, хто проявляє ініціативу, гинуть. Лег. 28 (Ольга — порятунок через підземну втечу)</div></td>
+    </tr>
+    <tr>
+      <td class="td-cat">Образ жінки</td>
+      <td class="td-pl">Три полюси: <strong>свята</strong> (Кунегунда, Кінга, Броніслава), <strong>грішниця на покуті</strong> (привид у Ридзіні), <strong>берегиня</strong> (старостина в Ойцові).<div class="examples">Лег. 9, 31, 44, 50, 52, 54</div></td>
+      <td class="td-lt"><strong>Божественна, але трагічна.</strong> Юрата гине від Перкуна. Крумміне — богиня-цивілізаторка. Вайделотка — жертва звинувачення.<div class="examples">Лег. 16 (Юрата), 20 (Крумміне), 23 (Вайделотка), 34, 125</div></td>
+      <td class="td-ru"><strong>Домінуючий образ — відьма або жертва.</strong> Відьма як активна зла сила. Дівчина — жертва порушеного слова або нещасного кохання.<div class="examples">Лег. 26, 27, 92, 93, 96, 98, 126, 138</div></td>
+    </tr>
+    <tr>
+      <td class="td-cat">Природа загрози</td>
+      <td class="td-pl"><strong>Зовнішня і конкретна:</strong> вороги, тиранія, непослух. Чорт — персонаж зі слабкостями. Пекло далеке.<div class="examples">Лег. 2, 8, 10–12</div></td>
+      <td class="td-lt"><strong>Порушення природного порядку:</strong> образа богів, вихід за межі дозволеного. Темні болота, чаклуни-лауми.<div class="examples">Лег. 16, 19, 34, 37</div></td>
+      <td class="td-ru"><strong>Внутрішня і дифузна:</strong> зрада, неправильна ідентифікація, порушене слово, колективна кара.<div class="examples">Лег. 24–27, 47 (Собек зраджує народ), 54, 89</div></td>
+    </tr>
+    <tr>
+      <td class="td-cat">Роль пам'яті</td>
+      <td class="td-pl"><strong>Легітимність.</strong> Родові герби, могили, реліквії як докази права. Минуле обґрунтовує сучасне.<div class="examples">Лег. 1, 2–3, 5, 31, 42</div></td>
+      <td class="td-lt"><strong>Ключ до сил природи.</strong> Топоніми виникають з пісень і вигуків. Назви місць фіксують момент відкриття або зусилля.<div class="examples">Лег. 21 (Немон), 22 (Румшизки), 36 (Джуга)</div></td>
+      <td class="td-ru"><strong>Туга, а не ресурс.</strong> Могили і вали — пам'ятники поразки. Вернигора пророкує з могили Сороки.<div class="examples">Лег. 24–29, 76 (Вернигора), 99, 100</div></td>
+    </tr>
+    <tr>
+      <td class="td-cat">Стосунки з владою</td>
+      <td class="td-pl"><strong>Влада легітимна, але підзвітна Богу.</strong> Неправедний пан карається. Сакральна ієрархія вища за світську.<div class="examples">Лег. 2, 10, 44, 56, 59</div></td>
+      <td class="td-lt"><strong>Влада — договірна або природна.</strong> Авторитет через компетентність, а не походження.<div class="examples">Лег. 16, 17, 20, 22</div></td>
+      <td class="td-ru"><strong>Пан — чужий або ворожий.</strong> Козацькі ватажки гинуть через зраду. Влада не захищає.<div class="examples">Лег. 47 (Собек), 75 (Пан-тиран = кий-місто), 76</div></td>
+    </tr>
+    <tr>
+      <td class="td-cat">Перемога хитрістю</td>
+      <td class="td-pl"><span class="pill pill-partial">Помірно</span> Більше покладається на молитву і святість. Хитрість присутня ситуативно.<div class="examples">Лег. 42, 79</div></td>
+      <td class="td-lt"><span class="pill pill-yes">Домінує</span> Обдурити чорта через абсурдне завдання, підмінити умови — головний спосіб.<div class="examples">Лег. 22, 144, 145</div></td>
+      <td class="td-ru"><span class="pill pill-no">Рідко</span> Хитрість майже відсутня. Спроба хитрувати закінчується загибеллю або трансформацією.</td>
+    </tr>
+    <tr>
+      <td class="td-cat">Зрада як пояснення</td>
+      <td class="td-pl"><span class="pill pill-partial">Присутня, не центральна</span> Зрада — мотив кари, рідше причина загибелі.<div class="examples">Лег. 2 (дружина Попеля)</div></td>
+      <td class="td-lt"><span class="pill pill-partial">Ситуативно</span> Юрата порушує закон Перкуна, але це пояснює природне явище (бурштин), а не соціальну катастрофу.<div class="examples">Лег. 16</div></td>
+      <td class="td-ru"><span class="pill pill-yes">Системна</span> Майже єдине пояснення поразки. Навіть пророцтво Вернигори будується на зраді як фоні.<div class="examples">Лег. 27, 29 (версія III), 47, 138</div></td>
+    </tr>
+    <tr>
+      <td class="td-cat">Характерні образи</td>
+      <td class="td-pl">Смок Вавельський · Мишача вежа · Привиди в замках · Мощі як юридичний доказ · Диявол у суді · Камінь-хліб</td>
+      <td class="td-lt">Юрата і бурштин · Гора мертвих Анафіелас · Будівник Немана · Дзвін «брате!» · Лауми в болотах · Домашні духи в норах</td>
+      <td class="td-ru">Вал Ольги (княгиня-миша) · Вали Змія · Вернигора · Джума як жінка · Козак-вовкулак · Зозуля-княгиня · Канія-викрадачка · Розмова худоби</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<hr style="border:none;text-align:center;margin:2rem 0 1rem;color:#8b6914;font-size:1rem;letter-spacing:.5em;" class="orn">
+<div style="margin:0 0 3rem;padding:1.2rem 1.5rem;background:#e8dfc8;border-left:4px solid #8b6914;border-radius:0 6px 6px 0;font-size:.85rem;line-height:1.7;">
+  <h3 style="font-family:'Playfair Display',serif;font-size:1rem;margin-bottom:.5rem;color:#7a3020;">Синтез: три різні психологічні архітектури</h3>
+  <p><strong>Польська традиція</strong> будується навколо <em>ієрархії з Богом на вершині</em>: пан карається, святий рятує, реліквія засвідчує. Смерть — не кінець, а стан очікування рішення вищої інстанції. Активність і покора однаково шануються залежно від ситуації.</p>
+  <p style="margin-top:.6rem;"><strong>Литовська традиція</strong> — <em>прагматична космологія</em>: з чортом можна домовитись, якщо ти розумніший. Богиня-цивілізаторка засновує рільництво. Навіть загибель (Юрата) стає природним феноменом (бурштин). Минуле кодується в ландшафті як ресурс, а не як борг.</p>
+  <p style="margin-top:.6rem;"><strong>Руська / українська традиція</strong> — <em>архітектура тривалого виживання без суверенітету</em>: зрада пояснює всі поразки, втеча — головна стратегія порятунку, могила — єдиний надійний пам'ятник, туга за минулим — єдиний дозволений афект.</p>
+</div>
+
+</div>
+
+<!-- ===== PDF VIEWER SECTION ===== -->
+<div id="tab-viewer" class="section">
+  <div class="viewer-layout">
+    <div class="toc-panel">
+      <div class="toc-header">149 легенд · зміст</div>
+      <input type="text" class="toc-search" id="toc-search" placeholder="Пошук..." oninput="filterToc(this.value)">
+      <div class="toc-list" id="toc-list"></div>
+    </div>
+    <div class="pdf-panel">
+      <div class="pdf-toolbar">
+        <button onclick="prevPage()">◀</button>
+        <span>Стор.</span>
+        <input type="number" id="page-input" min="1" value="1" onchange="goToPage(parseInt(this.value))">
+        <span id="total-pages">/ —</span>
+        <button onclick="nextPage()">▶</button>
+        <button onclick="zoomIn()">＋</button>
+        <button onclick="zoomOut()">－</button>
+        <span id="zoom-label" style="margin-left:.3rem;font-size:.75rem;color:#aaa;">100%</span>
+      </div>
+      <div class="pdf-canvas-wrap" id="canvas-wrap">
+        <div class="no-pdf-msg" id="no-pdf-msg">
+          <p>Щоб переглядати книгу, покладіть файл PDF поруч з цим HTML під назвою:</p>
+          <code>Podania_i_legendy.pdf</code>
+          <p style="margin-top:.5rem;font-size:.8rem;color:#aaa;">або вкажіть правильний шлях у змінній <code>PDF_PATH</code> на початку скрипту</p>
+        </div>
+        <canvas id="pdf-canvas" style="display:none;"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+// ── Config ──────────────────────────────────────────────
+const PDF_PATH = 'Podania_i_legendy_polskie__ruskie__litewskie.pdf';
+
+// ── Legend data ──────────────────────────────────────────
+const LEGENDS = [
+  {num:1,title:'Smok (Вавельський дракон)',page:25},
+  {num:2,title:'Mysia wieża w Kruszwicy',page:25},
+  {num:3,title:'Piast',page:27},
+  {num:4,title:'Pięciu męczenników kazimirskich',page:28},
+  {num:5,title:'Wskrzeszenie Piotrowina',page:33},
+  {num:6,title:'Męczeństwo Św. Stanisława na Skałce',page:36},
+  {num:7,title:'O Piotrze Duńczyku',page:40},
+  {num:8,title:'Oblężenie Nakła',page:41},
+  {num:9,title:'Pani Kinga',page:42},
+  {num:10,title:'Paweł z Przemankowa',page:43},
+  {num:11,title:'Biskup Gamrat',page:44},
+  {num:12,title:'Czterdziestu dziewięciu męczenników sandomierskich',page:44},
+  {num:13,title:'Wawrzyniec Powodowski',page:45},
+  {num:14,title:'Processya duchów',page:46},
+  {num:15,title:'Złotaryńko',page:46},
+  {num:16,title:'Królowa Bałtyku (Jurata)',page:47},
+  {num:17,title:'Witolf',page:50},
+  {num:18,title:'Krysztofor',page:51},
+  {num:19,title:'Anafielas',page:51},
+  {num:20,title:'Krumine',page:54},
+  {num:21,title:'Nemon',page:56},
+  {num:22,title:'Rumszys',page:57},
+  {num:23,title:'Wajdelotka',page:59},
+  {num:24,title:'Mogiły Soroki, Nepromacha i Praxedy',page:59},
+  {num:25,title:'Mogiła Perepiat i Perepiatychy',page:60},
+  {num:26,title:'Mogiła Mełanki',page:60},
+  {num:27,title:'Świrydowa mogiła',page:61},
+  {num:28,title:'Wał Olgi',page:62},
+  {num:29,title:'Wał Żmii',page:63},
+  {num:30,title:'Góra Koniusza',page:65},
+  {num:31,title:'Zupy solne w Wieliczce',page:66},
+  {num:32,title:'Strukis',page:66},
+  {num:33,title:'Krynica Parascewy',page:67},
+  {num:34,title:'Lasy Użwarmskie',page:68},
+  {num:35,title:'Dziwo w jeziorze krakowskim',page:68},
+  {num:36,title:'Diuga',page:69},
+  {num:37,title:'Szatrija',page:69},
+  {num:38,title:'Kiszporg',page:70},
+  {num:39,title:'Orły Herburtów',page:73},
+  {num:40,title:'Pileckie',page:73},
+  {num:41,title:'Skała Kmity',page:73},
+  {num:42,title:'Kamienna figura na kolegiacie w Wiślicy',page:74},
+  {num:43,title:'Żaby, drzwi i grobla w Wiślicy',page:75},
+  {num:44,title:'Zamek Ojcowski',page:77},
+  {num:45,title:'Głowa w izbie senatorskiej w Krakowie',page:78},
+  {num:46,title:'Stół marmurowy w Olesku',page:79},
+  {num:47,title:'Król Sobek',page:79},
+  {num:48,title:'Wąsy króla Jana',page:80},
+  {num:49,title:'Pan Przyjemski w Koźminie',page:80},
+  {num:50,title:'Wieża czarnej księżniczki w Szamotułach',page:81},
+  {num:51,title:'Zaklęty zamek w Lubaszu',page:82},
+  {num:52,title:'Widmo w zamku Rydzyńskim',page:83},
+  {num:53,title:'Skarbiec w Zbąszyniu',page:85},
+  {num:54,title:'Krzywoprzysięźna pani',page:86},
+  {num:55,title:'Zamek w Wyszynie',page:87},
+  {num:56,title:'Lubrański',page:88},
+  {num:57,title:'Zamek Jazłowiecki',page:88},
+  {num:58,title:'Skrzynno, jezioro pod Mosiną',page:89},
+  {num:59,title:'Myśliwy pan',page:89},
+  {num:60,title:'Pająk w Pajęcznie',page:90},
+  {num:61,title:'Kościół Bożogrobców w Gnieźnie',page:90},
+  {num:62,title:'Skarb w Luboni',page:91},
+  {num:63,title:'Stare zamczysko w Korniku',page:93},
+  {num:64,title:'Gnieźninek',page:94},
+  {num:65,title:'Wieś Ruda',page:95},
+  {num:66,title:'Milczący dzwonek',page:95},
+  {num:67,title:'Piwo grodziskie',page:95},
+  {num:68,title:'Brzoza gryzyńska',page:96},
+  {num:69,title:'Wiąz Św. Stanisława',page:97},
+  {num:70,title:'Obraz na księżycu',page:97},
+  {num:71,title:'Chleb kamienny w Oliwie',page:98},
+  {num:72,title:'Sosna brata Piotra',page:98},
+  {num:73,title:'Wizerunek Zbawiciela w trybunale lubelskim',page:99},
+  {num:74,title:'Św. Bronisława',page:101},
+  {num:75,title:'Założenie Kijowa',page:101},
+  {num:76,title:'Przepowiednie znachora Wernyhory',page:102},
+  {num:77,title:'Wąż domowy',page:103},
+  {num:78,title:'Dzwon wornieński w jeziorze Łukście',page:104},
+  {num:79,title:'Krzysztofory w Krakowie',page:104},
+  {num:80,title:'Kamień w Podkamieniu',page:105},
+  {num:81,title:'Zaklęta dziewczyna pod Strzelnem',page:105},
+  {num:82,title:'Droga Sierpiahi',page:106},
+  {num:83,title:'Ludzie obróceni w kamień',page:110},
+  {num:84,title:'Dusza towarzysza chorągwi Radziwiłłowskiej',page:111},
+  {num:85,title:'Brzezicki',page:112},
+  {num:86,title:'Duchy familijne',page:113},
+  {num:87,title:'Pielgrzym',page:114},
+  {num:88,title:'Upiór i Dżuma',page:115},
+  {num:89,title:'Rozmowa bydląt',page:117},
+  {num:90,title:'Niedźwiedź',page:118},
+  {num:91,title:'Król wężów',page:118},
+  {num:92,title:'Zazula (Kukułka)',page:119},
+  {num:93,title:'Kania',page:120},
+  {num:94,title:'Wił',page:120},
+  {num:95,title:'Bazyliszek',page:121},
+  {num:96,title:'Żaba',page:123},
+  {num:97,title:'Lipa',page:124},
+  {num:98,title:'Czajka',page:124},
+  {num:99,title:'Jaskinia pod Czercza',page:125},
+  {num:100,title:'Pieczary pod Straczem',page:128},
+  {num:101,title:'Pieczary w Czarnej górze',page:128},
+  {num:102,title:'Pieczara w Bruśniku',page:131},
+  {num:103,title:'Jamy zbójeckie',page:132},
+  {num:104,title:'Zbójeckie pieniądze',page:132},
+  {num:105,title:'Jama nad Morskim okiem',page:133},
+  {num:106,title:'Księgi czarnoksięzkie',page:133},
+  {num:107,title:'Czechy wędrowne',page:133},
+  {num:108,title:'Morskie oko',page:134},
+  {num:109,title:'Skarbnik',page:134},
+  {num:110,title:'Zbójcy',page:135},
+  {num:111,title:'Janoszczyk',page:135},
+  {num:112,title:'Kowal z Charklowej',page:136},
+  {num:113,title:'Parobek z Łopuszny',page:137},
+  {num:114,title:'Mnich',page:137},
+  {num:115,title:'Głowa błąkająca się',page:138},
+  {num:116,title:'Diabeł cechujący jawory',page:138},
+  {num:117,title:'Diabeł we wichrze',page:139},
+  {num:118,title:'Diabeł i piorun',page:139},
+  {num:119,title:'Iskrzycki',page:139},
+  {num:120,title:'Boruta',page:140},
+  {num:121,title:'Czarownica',page:140},
+  {num:122,title:'Grad',page:140},
+  {num:123,title:'Latawiec',page:141},
+  {num:124,title:'Łełeki',page:141},
+  {num:125,title:'Diwożony',page:142},
+  {num:126,title:'Topielec',page:144},
+  {num:127,title:'Dobrochocz',page:145},
+  {num:128,title:'Miawki',page:145},
+  {num:129,title:'Wodnice',page:146},
+  {num:130,title:'Dżuma',page:147},
+  {num:131,title:'Pomór na bydło',page:147},
+  {num:132,title:'Morowa dziewica',page:148},
+  {num:133,title:'Miłosław zabezpieczony od morowego powietrza',page:149},
+  {num:134,title:'Zemsta czarownicy',page:149},
+  {num:135,title:'Kochanka sprowadzona czarami',page:150},
+  {num:136,title:'Bojaźliwy rycerz',page:151},
+  {num:137,title:'Urocze oczy',page:152},
+  {num:138,title:'Charko Makohonik',page:153},
+  {num:139,title:'Zaklęte wesele',page:156},
+  {num:140,title:'Porwana dziewczyna',page:157},
+  {num:141,title:'Parobek wilkołakiem',page:158},
+  {num:142,title:'Niewierna żona',page:159},
+  {num:143,title:'Kupiec poznański wilkołakiem',page:160},
+  {num:144,title:'Mądry Uburtis i diabeł',page:160},
+  {num:145,title:'Chłopski rozum',page:163},
+  {num:146,title:'Wesele zamienione w wilkołaki',page:164},
+  {num:147,title:'Paproć',page:165},
+  {num:148,title:'Początek wierzby',page:166},
+  {num:149,title:'Homeu',page:166},
+  {num:150,title:'Iskrzycki (diabeł domowy)',page:173},
+  {num:151,title:'Twardowski — pakt z diabłem',page:174},
+  {num:152,title:'Twardowski — czarnoksięstwo',page:175},
+  {num:153,title:'Twardowski — ucieczka na księżyc',page:176},
+  {num:154,title:'Twardowski — recepta na ducha',page:177},
+  {num:155,title:'Twardowski — wskrzeszenie',page:178},
+  {num:156,title:'Twardowski — wywołanie ducha królowej',page:179},
+  {num:157,title:'Twardowski — zwierciadło',page:180},
+  {num:158,title:'Czarnoksięska księga',page:181},
+];
+// ── Tab switching ────────────────────────────────────────
+function showTab(name){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('tab-'+name).classList.add('active');
+  if(name==='viewer' && !pdfDoc) initPdf();
+}
+
+// ── TOC ──────────────────────────────────────────────────
+const tocList = document.getElementById('toc-list');
+function buildToc(filter=''){
+  tocList.innerHTML='';
+  const f = filter.toLowerCase();
+  LEGENDS.forEach(l=>{
+    if(f && !l.title.toLowerCase().includes(f) && !String(l.num).includes(f)) return;
+    const item = document.createElement('div');
+    item.className='toc-item';
+    item.dataset.page=l.page;
+    item.innerHTML=`<span class="toc-num">${l.num}.</span><span class="toc-title">${l.title}</span><span class="toc-page">${l.page}</span>`;
+    item.addEventListener('click',()=>{
+      document.querySelectorAll('.toc-item').forEach(i=>i.classList.remove('active'));
+      item.classList.add('active');
+      goToPage(l.page);
+    });
+    tocList.appendChild(item);
+  });
+}
+function filterToc(v){ buildToc(v); }
+buildToc();
+
+// ── PDF.js ───────────────────────────────────────────────
+pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+let pdfDoc=null, currentPage=1, scale=1.4, rendering=false;
+const canvas=document.getElementById('pdf-canvas');
+const ctx=canvas.getContext('2d');
+
+async function initPdf(){
+  try{
+    const loadingTask=pdfjsLib.getDocument(PDF_PATH);
+    pdfDoc=await loadingTask.promise;
+    document.getElementById('total-pages').textContent='/ '+pdfDoc.numPages;
+    document.getElementById('no-pdf-msg').style.display='none';
+    canvas.style.display='block';
+    renderPage(currentPage);
+  }catch(e){
+    console.warn('PDF load failed:',e);
+  }
+}
+
+async function renderPage(n){
+  if(!pdfDoc||rendering) return;
+  rendering=true;
+  currentPage=Math.max(1,Math.min(n,pdfDoc.numPages));
+  document.getElementById('page-input').value=currentPage;
+  const page=await pdfDoc.getPage(currentPage);
+  const vp=page.getViewport({scale});
+  canvas.width=vp.width; canvas.height=vp.height;
+  await page.render({canvasContext:ctx,viewport:vp}).promise;
+  rendering=false;
+}
+
+function prevPage(){ renderPage(currentPage-1); }
+function nextPage(){ renderPage(currentPage+1); }
+function goToPage(n){ renderPage(n); }
+function zoomIn(){ scale=Math.min(scale+0.2,3); document.getElementById('zoom-label').textContent=Math.round(scale*100)+'%'; renderPage(currentPage); }
+function zoomOut(){ scale=Math.max(scale-0.2,0.5); document.getElementById('zoom-label').textContent=Math.round(scale*100)+'%'; renderPage(currentPage); }
+
+// keyboard nav
+document.addEventListener('keydown',e=>{
+  if(document.getElementById('tab-viewer').classList.contains('active')){
+    if(e.key==='ArrowRight'||e.key==='ArrowDown') nextPage();
+    if(e.key==='ArrowLeft'||e.key==='ArrowUp') prevPage();
+  }
+});
+</script>
+</body>
+</html>
